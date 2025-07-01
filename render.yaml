@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: bot-alimentos-2
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python bot.py"
+    envVars:
+      - key: TELEGRAM_TOKEN
+        value: 7591153745:AAG2lGLvHCHUxfv9LQSSJb2Sv1CRxUDFCyM
+      - key: GEMINI_API_KEY
+        value: AIzaSyBYAmwVyXMwoogy2R4_mjorNTva1tYcYz0
+    autoDeploy: true
+    plan: free
+    region: oregon
+    ports:
+      - port: 8000
+        protocol: http
