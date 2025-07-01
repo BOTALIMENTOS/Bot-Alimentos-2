@@ -3,7 +3,7 @@ services:
     name: bot-alimentos-2
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python bot.py"
+    startCommand: "gunicorn -b 0.0.0.0:$PORT bot:flask_app"
     envVars:
       - key: TELEGRAM_TOKEN
         value: 7591153745:AAG2lGLvHCHUxfv9LQSSJb2Sv1CRxUDFCyM
@@ -12,6 +12,3 @@ services:
     autoDeploy: true
     plan: free
     region: oregon
-    ports:
-      - port: 8000
-        protocol: http

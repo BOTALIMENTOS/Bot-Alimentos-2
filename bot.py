@@ -159,7 +159,7 @@ if __name__ == '__main__':
 
     app.run_webhook(
         listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 8000)),
+        port=int(os.environ.get("PORT"))
         webhook_url="https://bot-alimentos-2.onrender.com/webhook",
         web_app=flask_app
     )
