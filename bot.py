@@ -145,21 +145,17 @@ def webhook():
     return "Webhook recibido", 200
 
 # --- Iniciar bot con webhook ---
-if __name__ == '__main__':
-    app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+if __name__ == "__main__":
+    import asyncio
+    async def set_webhook():
+        webhook_url = "https://bot-alimentos-2.onrender.com/webhook"
+        await app.bot.set_webhook(webhook_url)
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("menu", menu))
-    app.add_handler(CommandHandler("receta", receta))
-    app.add_handler(CommandHandler("compras", compras))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_image))
+    asyncio.run(set_webhook())
 
-    print("✅ Bot en modo Webhook...")
-
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get("PORT"))
+    print("✅ Bot en modo Webhook + Flask")
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+T"))
         webhook_url="https://bot-alimentos-2.onrender.com/webhook",
         web_app=flask_app
     )
