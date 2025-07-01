@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from PIL import Image
 import pytesseract
+from flask import Flask, request
 
 # --- Configuración de entorno y Gemini ---
 load_dotenv()
@@ -136,9 +137,14 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if os.path.exists(photo_path):
             os.remove(photo_path)
 
-# --- Iniciar bot ---
-from telegram.ext import ApplicationBuilder
+# --- Flask para exponer el webhook ---
+flask_app = Flask(__name__)
 
+@flask_app.route('/webhook', methods=['POST'])
+def webhook():
+    return "Webhook recibido", 200
+
+# --- Iniciar bot con webhook ---
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
@@ -147,15 +153,13 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("receta", receta))
     app.add_handler(CommandHandler("compras", compras))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_image))
 
     print("✅ Bot en modo Webhook...")
 
-    # Tu URL de Render
-    WEBHOOK_URL = "https://bot-alimentos-2.onrender.com"
-
     app.run_webhook(
         listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 10000)),
-        webhook_url=f"{WEBHOOK_URL}/webhook"
+        port=int(os.environ.get("PORT", 8000)),
+        webhook_url="https://bot-alimentos-2.onrender.com/webhook",
+        web_app=flask_app
     )
-
